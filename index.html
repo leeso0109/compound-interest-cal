@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>복리 계산기와 연도별 자산 테이블</title>
+    <style>
+        /* 페이지 전체 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: grid;
+            place-items: center; /* 정중앙 배치를 위한 설정 */
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* 컨텐츠 박스 설정 */
+        .container {
+            max-width: 600px; /* 최대 너비 */
+            width: 100%;
+            padding: 20px; /* 여백 추가 */
+        }
+
+        /* 계산기 박스 스타일 */
+        .calculator {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #333333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .result {
+            font-size: 1.2em;
+            color: #2c7a7b;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        button {
+            background-color: #3182ce;
+            color: #ffffff;
+            font-size: 1em;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2b6cb0;
+        }
+
+        /* 링크 스타일 */
+        .external-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #3182ce;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="calculator">
+        <h1>복리 계산기</h1>
+        <div class="form-group">
+            <label for="principal">초기 금액 (원):</label>
+            <input type="number" id="principal" placeholder="예: 1000000">
+        </div>
+        <div class="form-group">
+            <label for="rate">연이율 (%):</label>
+            <input type="number" id="rate" placeholder="예: 5">
+        </div>
+        <div class="form-group">
+            <label for="years">기간 (년):</label>
+            <input type="number" id="years" placeholder="예: 10">
+        </div>
+        <button onclick="calculateCompoundInterest()">계산하기</button>
+        
+        <div class="result" id="result">결과가 여기에 표시됩니다.</div>
+
+        <!-- 외부 링크 -->
+        <a href="https://www.openai.com" target="_blank" class="external-link">OpenAI 웹사이트로 이동하기</a>
+    </div>
+
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>연도</th>
+                <th>연도별 자산 총합 (원)</th>
+                <th>연도별 증가량 (원)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 계산 결과가 여기에 표시됩니다 -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function calculateCompoundInterest() {
+        const principal = parseFloat(document.getElementById("principal").value);
+        const rate = parseFloat(document.getElementById("rate").value);
+        const years = parseInt(document.getElementById("years").value);
+
+        if (isNaN(principal) || isNaN(rate) || isNaN(years)) {
+            document.getElementById("result").innerText = "모든 값을 올바르게 입력하세요.";
+            return;
+        }
+
+        let total = principal;
+        const tableBody = document.getElementById("resultTable").getElementsByTagName("tbody")[0];
+        tableBody.innerHTML = "";  // 테이블 초기화
+
+        for (let i = 1; i <= years; i++) {
+            const previousTotal = total;             // 이전 연도의 자산
+            total *= (1 + rate / 100);               // 복리 계산
+            const growth = total - previousTotal;    // 연도별 증가량 계산
+
+            // 행 생성
+            const row = tableBody.insertRow();
+            row.insertCell(0).innerText = `${i}년`;       // 연도
+            row.insertCell(1).innerText = total.toFixed(2);  // 연도별 자산 총합
+            row.insertCell(2).innerText = growth.toFixed(2); // 연도별 증가량
+        }
+
+        // 총합 표시
+        document.getElementById("result").innerText = `총 금액: ${total.toFixed(2)}원`;
+    }
+</script>
+
+</body>
+</html>
